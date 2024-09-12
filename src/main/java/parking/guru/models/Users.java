@@ -31,7 +31,7 @@ public class Users {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String UID;
 
     @OneToOne(cascade = CascadeType.ALL)
