@@ -1,14 +1,26 @@
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "${clientId}"
+            client-secret: "${clientSecret}"
   application:
     name:
-      name
+      parking-guru
   datasource:
-    url: jdbc:postgresql://localhost:5433/postgres
+    url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: 123456
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+app:
+  jwt:
+    secret: value
+    expiration:
+      minutes: 10
