@@ -44,12 +44,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/**").hasAnyAuthority(String.valueOf(Role.TECHNIC))
-                        .anyRequest().authenticated())
+                        .requestMatchers("/**").permitAll()
+//                        .requestMatchers("/graphql").authenticated()
+                )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .userInfoEndpoint(c -> c.userService(customOauth2UserService))
-                        .successHandler(customAuthenticationSuccessHandler))
+                        .successHandler(customAuthenticationSuccessHandler)
+
+                )
                 .logout(l -> l.logoutSuccessUrl("/").permitAll())
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
