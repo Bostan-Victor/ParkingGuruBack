@@ -48,4 +48,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 }
