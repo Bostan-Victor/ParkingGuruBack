@@ -6,8 +6,8 @@ import parking.guru.models.enums.Type;
 import java.util.List;
 
 @Entity
-@Table(name = "Vehicles")
-public class Vehicles {
+@Table(name = "vehicle")
+public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,10 +16,11 @@ public class Vehicles {
     private String plateNumber;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Type type;
 
     @ManyToMany(mappedBy = "vehicles")
-    private List<Users> users;
+    private List<User> users;
 
     @ManyToMany
     @JoinTable(
@@ -27,7 +28,7 @@ public class Vehicles {
             joinColumns = @JoinColumn(name = "vehicle_id"),
             inverseJoinColumns = @JoinColumn(name = "reservation_id")
     )
-    private List<Reservations> reservations;
+    private List<Reservation> reservations;
 
     public Long getId() {
         return id;
@@ -53,19 +54,19 @@ public class Vehicles {
         this.type = type;
     }
 
-    public List<Users> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Users> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public List<Reservations> getReservations() {
+    public List<Reservation> getReservations() {
         return reservations;
     }
 
-    public void setReservations(List<Reservations> reservations) {
+    public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
 }

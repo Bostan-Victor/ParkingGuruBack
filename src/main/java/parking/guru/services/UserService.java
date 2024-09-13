@@ -1,8 +1,7 @@
 package parking.guru.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import parking.guru.models.Users;
+import parking.guru.models.User;
 import parking.guru.repositories.UserRepository;
 
 import java.util.List;
@@ -10,18 +9,43 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public Users createUser(Users user) {
-        return userRepository.save(user);
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public List<Users> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<Users> getUserById(Long id) {
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+
+    public Optional<User> getUserByUserEmail(String username) {
+        return userRepository.findByUserEmail(username);
+    }
+
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    public boolean hasUserWithEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public User validateAndGetUserByUsername(String username) {
+        return getUserByUserEmail(username)
+                .orElseThrow(() -> new RuntimeException(String.format("User with username %s not found", username)));
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
 }
