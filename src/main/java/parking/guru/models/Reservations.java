@@ -33,10 +33,10 @@ public class Reservations {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private User user;
 
     @ManyToMany(mappedBy = "reservations")
-    private List<Vehicles> vehicles;
+    private List<Vehicle> vehicles;
 
     public Long getId() {
         return id;
@@ -94,19 +94,19 @@ public class Reservations {
         this.status = status;
     }
 
-    public Users getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    public List<Vehicles> getVehicles() {
+    public List<Vehicle> getVehicles() {
         return vehicles;
     }
 
-    public void setVehicles(List<Vehicles> vehicles) {
+    public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
     }
 }

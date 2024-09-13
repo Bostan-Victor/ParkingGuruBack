@@ -19,7 +19,7 @@ public class  Profiles {
     private Boolean isVerified;
 
     @OneToOne(mappedBy = "profile")
-    private Users user;
+    private User user;
 
     public Long getId() {
         return id;
@@ -53,11 +53,11 @@ public class  Profiles {
         isVerified = verified;
     }
 
-    public Users getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Users user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

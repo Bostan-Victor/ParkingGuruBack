@@ -2,7 +2,7 @@ package parking.guru.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import parking.guru.models.Vehicles;
+import parking.guru.models.Vehicle;
 import parking.guru.repositories.VehicleRepository;
 
 import java.util.List;
@@ -14,19 +14,19 @@ public class VehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
-    public Vehicles saveVehicle(Vehicles vehicle) {
+    public Vehicle saveVehicle(Vehicle vehicle) {
         return vehicleRepository.save(vehicle);
     }
 
-    public List<Vehicles> getAllVehicles() {
+    public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
     }
 
-    public Optional<Vehicles> getVehicleById(Long id) {
+    public Optional<Vehicle> getVehicleById(Long id) {
         return vehicleRepository.findById(id);
     }
 
-    public Optional<Vehicles> getVehicleByPlateNumber(String plateNumber) {
+    public Optional<Vehicle> getVehicleByPlateNumber(String plateNumber) {
         return vehicleRepository.findByPlateNumber(plateNumber);
     }
 

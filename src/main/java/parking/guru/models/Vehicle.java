@@ -7,7 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Vehicles")
-public class Vehicles {
+public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,7 +19,7 @@ public class Vehicles {
     private Type type;
 
     @ManyToMany(mappedBy = "vehicles")
-    private List<Users> users;
+    private List<User> users;
 
     @ManyToMany
     @JoinTable(
@@ -53,11 +53,11 @@ public class Vehicles {
         this.type = type;
     }
 
-    public List<Users> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<Users> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 

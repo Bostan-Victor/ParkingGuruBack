@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Users")
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,7 +47,7 @@ public class Users {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "vehicle_id")
     )
-    private List<Vehicles> vehicles;
+    private List<Vehicle> vehicles;
 
     public Long getId() {
         return id;
@@ -129,11 +129,11 @@ public class Users {
         this.reservations = reservations;
     }
 
-    public List<Vehicles> getVehicles() {
+    public List<Vehicle> getVehicles() {
         return vehicles;
     }
 
-    public void setVehicles(List<Vehicles> vehicles) {
+    public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
     }
 }
