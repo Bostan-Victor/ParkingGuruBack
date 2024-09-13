@@ -1,13 +1,20 @@
 package parking.guru.models;
 
 import jakarta.persistence.*;
+import lombok.*;
+import parking.guru.config.security.oauth2.OAuth2Provider;
 import parking.guru.models.enums.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "user_entity")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +29,7 @@ public class User {
     @Column(nullable = false, length=32)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
 
@@ -31,15 +39,18 @@ public class User {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String UID;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private Profiles profile;
+    private Profile profile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Reservations> reservations;
+    private List<Reservation> reservations;
+
+    @Enumerated(EnumType.STRING)
+    private OAuth2Provider provider;
 
     @ManyToMany
     @JoinTable(
@@ -48,93 +59,5 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "vehicle_id")
     )
     private List<Vehicle> vehicles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getUID() {
-        return UID;
-    }
-
-    public void setUID(String UID) {
-        this.UID = UID;
-    }
-
-    public Profiles getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profiles profile) {
-        this.profile = profile;
-    }
-
-    public List<Reservations> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservations> reservations) {
-        this.reservations = reservations;
-    }
-
-    public List<Vehicle> getVehicles() {
-        return vehicles;
-    }
-
-    public void setVehicles(List<Vehicle> vehicles) {
-        this.vehicles = vehicles;
-    }
 }
 

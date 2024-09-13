@@ -7,8 +7,8 @@ import java.util.List;
 import parking.guru.models.enums.Status;
 
 @Entity
-@Table(name = "Reservations")
-public class Reservations {
+@Table(name = "reservation")
+public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +29,7 @@ public class Reservations {
     private String longitude;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Status status = Status.UNCHECKED;
 
     @ManyToOne
