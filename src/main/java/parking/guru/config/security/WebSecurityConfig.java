@@ -44,8 +44,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers("/**").permitAll()
-//                        .requestMatchers("/graphql").authenticated()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/graphql").authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .userInfoEndpoint(c -> c.userService(customOauth2UserService))
