@@ -16,19 +16,16 @@ public class ReservationQueryResolver {
 
     private final ReservationService reservationService;
 
-    // Query to get reservation history for a user
-    @QueryMapping  // Annotation for GraphQL queries
+    @QueryMapping
     public List<Reservation> reservationHistory(Long userId) {
         return reservationService.getReservationHistory(userId);
     }
 
-    // Query to get the active reservation for a user
     @QueryMapping
     public Reservation activeReservation(Long userId) {
         return reservationService.getActiveReservation(userId);
     }
 
-    // Query to check reservation status by plate number
     @QueryMapping
     public Status checkReservationStatusByPlateNumber(@Argument String plateNumber) {
         Reservation reservation = reservationService.getReservationByPlateNumber(plateNumber);
