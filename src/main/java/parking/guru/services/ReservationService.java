@@ -1,10 +1,7 @@
 package parking.guru.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import parking.guru.models.Reservation;
 import parking.guru.repositories.ReservationRepository;
 
@@ -12,17 +9,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public Reservation saveReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
     public Optional<Reservation> getReservationById(Long id) {
-        return reservationRepository.findById(id); // Uses the JPA Repository's built-in findById method
+        return reservationRepository.findById(id);
+    }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
     }
 
     public List<Reservation> getReservationHistory(Long userId) {
@@ -33,27 +34,7 @@ public class ReservationService {
         return reservationRepository.findByUserIdAndEndDateTimeIsNull(userId);
     }
 
-    @PreAuthorize("hasAuthority('POLICE')")
-    public Reservation getReservationByPlateNumber(String plateNumber) {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        return reservationRepository.findByPlateNumber(plateNumber);
-    }
-
-    @Transactional
-    public Reservation saveReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
-    }
-
-    @Transactional
-    public void deleteReservation(Long reservationId) {
-        reservationRepository.deleteById(reservationId);
-    }
-
-    public Optional<Reservation> getReservationByLocation(String latitude, String longitude) {
-        return reservationRepository.findByLocation(latitude, longitude);
-    }
-
-    public Optional<Reservation> getReservationByStatus(parking.guru.models.enums.Status status) {
-        return reservationRepository.findByStatus(status);
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id);
     }
 }
