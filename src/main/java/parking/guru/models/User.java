@@ -10,12 +10,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "user_entity")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +30,17 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Added firstName and lastName fields
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
+
+    // UID Field
+    @Column(nullable = false, unique = true)
+    private String uid;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -38,9 +50,6 @@ public class User {
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
-
-    @Column(nullable = false)
-    private String UID;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
@@ -60,4 +69,3 @@ public class User {
     )
     private List<Vehicle> vehicles;
 }
-

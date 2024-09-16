@@ -21,6 +21,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    public Optional<Reservation> getReservationById(Long id) {
+        return reservationRepository.findById(id); // Uses the JPA Repository's built-in findById method
+    }
+
     public List<Reservation> getReservationHistory(Long userId) {
         return reservationRepository.findByUserIdAndEndDateTimeIsNotNull(userId);
     }
@@ -37,7 +41,6 @@ public class ReservationService {
 
     @Transactional
     public Reservation saveReservation(Reservation reservation) {
-        // You can add custom validation logic here if necessary
         return reservationRepository.save(reservation);
     }
 

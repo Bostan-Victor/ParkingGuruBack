@@ -20,18 +20,23 @@ public class ReservationController {
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
+
+    // Create or update a reservation
     @PostMapping
     public ResponseEntity<Reservation> createOrUpdateReservation(@RequestBody Reservation reservation) {
         Reservation savedReservation = reservationService.saveReservation(reservation);
         return ResponseEntity.ok(savedReservation);
     }
 
+    // Get reservation by ID (fixed method)
     @GetMapping("/{id}")
     public ResponseEntity<Reservation> getReservationById(@PathVariable Long id) {
-        Optional<Reservation> reservation = Optional.ofNullable(reservationService.getActiveReservation(id));
+        Optional<Reservation> reservation = reservationService.getReservationById(id);
         return reservation.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // Get active reservation for a user by user ID
     @GetMapping("/active/{userId}")
     public ResponseEntity<Reservation> getActiveReservation(@PathVariable Long userId) {
         Reservation activeReservation = reservationService.getActiveReservation(userId);
@@ -41,6 +46,7 @@ public class ReservationController {
         return ResponseEntity.notFound().build();
     }
 
+    // Get reservation history for a user
     @GetMapping("/history/{userId}")
     public ResponseEntity<List<Reservation>> getReservationHistory(@PathVariable Long userId) {
         List<Reservation> reservationHistory = reservationService.getReservationHistory(userId);
@@ -50,6 +56,7 @@ public class ReservationController {
         return ResponseEntity.ok(reservationHistory);
     }
 
+    // Get reservation by plate number
     @GetMapping("/plate/{plateNumber}")
     public ResponseEntity<Reservation> getReservationByPlateNumber(@PathVariable String plateNumber) {
         Reservation reservation = reservationService.getReservationByPlateNumber(plateNumber);
@@ -59,6 +66,7 @@ public class ReservationController {
         return ResponseEntity.notFound().build();
     }
 
+    // Get reservation by location (latitude and longitude)
     @GetMapping("/location")
     public ResponseEntity<Reservation> getReservationByLocation(@RequestParam String latitude, @RequestParam String longitude) {
         Optional<Reservation> reservation = reservationService.getReservationByLocation(latitude, longitude);
@@ -66,6 +74,7 @@ public class ReservationController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // Get reservation by status
     @GetMapping("/status/{status}")
     public ResponseEntity<Reservation> getReservationByStatus(@PathVariable Status status) {
         Optional<Reservation> reservation = reservationService.getReservationByStatus(status);
@@ -73,6 +82,7 @@ public class ReservationController {
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
+    // Delete a reservation by ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
