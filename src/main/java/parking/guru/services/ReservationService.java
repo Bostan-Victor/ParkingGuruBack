@@ -3,6 +3,7 @@ package parking.guru.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import parking.guru.models.Reservation;
+import parking.guru.models.enums.Status;
 import parking.guru.repositories.ReservationRepository;
 
 import java.util.List;
@@ -22,8 +23,16 @@ public class ReservationService {
         return reservationRepository.findById(id);
     }
 
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    public Reservation getReservationByPlateNumber(String plateNumber) {
+        return reservationRepository.findByPlateNumber(plateNumber);
+    }
+
+    public Optional<Reservation> getReservationByLocation(String latitude, String longitude) {
+        return reservationRepository.findByLocation(latitude, longitude);
+    }
+
+    public Optional<Reservation> getReservationByStatus(Status status) {
+        return reservationRepository.findByStatus(status);
     }
 
     public List<Reservation> getReservationHistory(Long userId) {
@@ -32,6 +41,10 @@ public class ReservationService {
 
     public Reservation getActiveReservation(Long userId) {
         return reservationRepository.findByUserIdAndEndDateTimeIsNull(userId);
+    }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
     }
 
     public void deleteReservation(Long id) {

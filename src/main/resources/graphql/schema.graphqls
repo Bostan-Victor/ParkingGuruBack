@@ -6,7 +6,7 @@ type Query {
     reservationById(id: ID!): Reservation
 
     allUsers: [User]
-    userById(id: ID!): User
+    userById(id: Int!): User
     userByEmail(email: String!): User
 
     allProfiles: [Profile]
@@ -61,7 +61,7 @@ type Reservation {
 }
 
 type User {
-    id: ID
+    id: Int
     email: String
     firstName: String
     lastName: String

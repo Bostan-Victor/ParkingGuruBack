@@ -16,11 +16,11 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 app:
   jwt:
-    secret: value
+    secret: пкупркпеупеупеупупупеупркркиккыркрнкркркркркырнкрыкркрнкрнкрыкрнкырнкрыкнрыкрнкры
     expiration:
       minutes: 10
