@@ -5,10 +5,10 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 import parking.guru.models.Reservation;
-import parking.guru.models.enums.Status;
 import parking.guru.services.ReservationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,25 +16,24 @@ public class ReservationQueryResolver {
 
     private final ReservationService reservationService;
 
-    // Query to get reservation history for a user
-    @QueryMapping  // Annotation for GraphQL queries
-    public List<Reservation> reservationHistory(Long userId) {
+    @QueryMapping
+    public List<Reservation> reservationHistory(@Argument Long userId) {
         return reservationService.getReservationHistory(userId);
     }
 
-    // Query to get the active reservation for a user
     @QueryMapping
-    public Reservation activeReservation(Long userId) {
+    public Reservation activeReservation(@Argument Long userId) {
         return reservationService.getActiveReservation(userId);
     }
 
-    // Query to check reservation status by plate number
     @QueryMapping
-    public Status checkReservationStatusByPlateNumber(@Argument String plateNumber) {
-        Reservation reservation = reservationService.getReservationByPlateNumber(plateNumber);
-        if (reservation == null) {
-            return Status.NO_TICKET;
-        }
-        return reservation.getStatus();
+    public Reservation reservationById(@Argument Long id) {
+        return reservationService.getReservationById(id)
+                .orElseThrow(() -> new RuntimeException("Reservation not found with id: " + id));
+    }
+
+    @QueryMapping
+    public List<Reservation> allReservations() {
+        return reservationService.getAllReservations();
     }
 }

@@ -1,42 +1,53 @@
 package parking.guru.services;
 
-import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import parking.guru.models.Reservation;
+import parking.guru.models.enums.Status;
 import parking.guru.repositories.ReservationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
+
     private final ReservationRepository reservationRepository;
-
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
-    // Fetch reservation history for a user (where endDateTime is not null)
-    public List<Reservation> getReservationHistory(Long userId) {
-        return reservationRepository.findByUserIdAndEndDateTimeIsNotNull(userId);
-    }
-
-    // Fetch active reservation for a user (where endDateTime is null)
-    public Reservation getActiveReservation(Long userId) {
-        return reservationRepository.findByUserIdAndEndDateTimeIsNull(userId);
-    }
-
-    @PreAuthorize("hasAuthority('POLICE')")
-    // Fetch reservation by plate number
-    public Reservation getReservationByPlateNumber(String plateNumber) {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        return reservationRepository.findByPlateNumber(plateNumber);
-    }
 
     public Reservation saveReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
-}
 
+    public Optional<Reservation> getReservationById(Long id) {
+        return reservationRepository.findById(id);
+    }
+
+    public Reservation getReservationByPlateNumber(String plateNumber) {
+        return reservationRepository.findByPlateNumber(plateNumber);
+    }
+
+    public Optional<Reservation> getReservationByLocation(String latitude, String longitude) {
+        return reservationRepository.findByLocation(latitude, longitude);
+    }
+
+    public Optional<Reservation> getReservationByStatus(Status status) {
+        return reservationRepository.findByStatus(status);
+    }
+
+    public List<Reservation> getReservationHistory(Long userId) {
+        return reservationRepository.findByUserIdAndEndDateTimeIsNotNull(userId);
+    }
+
+    public Reservation getActiveReservation(Long userId) {
+        return reservationRepository.findByUserIdAndEndDateTimeIsNull(userId);
+    }
+
+    public List<Reservation> getAllReservations() {
+        return reservationRepository.findAll();
+    }
+
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id);
+    }
+}

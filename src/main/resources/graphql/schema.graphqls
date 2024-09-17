@@ -2,10 +2,37 @@ type Query {
     reservationHistory(userId: ID!): [Reservation]
     activeReservation(userId: ID!): Reservation
     checkReservationStatusByPlateNumber(plateNumber: String!): ReservationStatus
+    allReservations: [Reservation]
+    reservationById(id: ID!): Reservation
+
+    allUsers: [User]
+    userById(id: Int!): User
+    userByEmail(email: String!): User
+
+    allProfiles: [Profile]
+    profileById(id: ID!): Profile
+
+    allVehicles: [Vehicle]
+    vehicleById(id: ID!): Vehicle
+    vehicleByPlateNumber(plateNumber: String!): Vehicle
 }
 
 type Mutation {
     createReservation(input: CreateReservationInput!): Reservation
+    updateReservation(id: ID!, input: UpdateReservationInput!): Reservation
+    deleteReservation(id: ID!): Boolean
+
+    createUser(input: CreateUserInput!): User
+    updateUser(id: ID!, input: UpdateUserInput!): User
+    deleteUser(id: ID!): Boolean
+
+    createProfile(input: CreateProfileInput!): Profile
+    updateProfile(id: ID!, input: UpdateProfileInput!): Profile
+    deleteProfile(id: ID!): Boolean
+
+    createVehicle(input: CreateVehicleInput!): Vehicle
+    updateVehicle(id: ID!, input: UpdateVehicleInput!): Vehicle
+    deleteVehicle(id: ID!): Boolean
 }
 
 input CreateReservationInput {
@@ -15,6 +42,13 @@ input CreateReservationInput {
     plateNumber: String!
 }
 
+input UpdateReservationInput {
+    latitude: String
+    longitude: String
+    endDateTime: String
+    status: ReservationStatus
+}
+
 type Reservation {
     id: ID
     startDateTime: String
@@ -22,18 +56,75 @@ type Reservation {
     plateNumber: String
     latitude: String
     longitude: String
-    status: String
+    status: ReservationStatus
     user: User
 }
 
 type User {
-    id: ID
+    id: Int
     email: String
     firstName: String
     lastName: String
     phoneNumber: String
     uid: String
     role: String
+    profile: Profile
+    reservations: [Reservation]
+}
+
+type Profile {
+    id: ID
+    firstName: String
+    lastName: String
+    isVerified: Boolean
+    user: User
+}
+
+type Vehicle {
+    id: ID
+    plateNumber: String
+    type: String
+    users: [User]
+    reservations: [Reservation]
+}
+
+input CreateUserInput {
+    email: String!
+    firstName: String!
+    lastName: String!
+    phoneNumber: String!
+    uid: String!
+    role: String!
+}
+
+input UpdateUserInput {
+    email: String
+    firstName: String
+    lastName: String
+    phoneNumber: String
+    role: String
+}
+
+input CreateProfileInput {
+    firstName: String!
+    lastName: String!
+    isVerified: Boolean
+}
+
+input UpdateProfileInput {
+    firstName: String
+    lastName: String
+    isVerified: Boolean
+}
+
+input CreateVehicleInput {
+    plateNumber: String!
+    type: String!
+}
+
+input UpdateVehicleInput {
+    plateNumber: String
+    type: String
 }
 
 enum ReservationStatus {

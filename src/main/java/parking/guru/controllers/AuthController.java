@@ -57,9 +57,11 @@ public class AuthController {
         user.setEmail(signUpRequest.getEmail());
         user.setRole(Role.USER);
         user.setPhoneNumber(signUpRequest.getPhoneNumber());
-        user.setUID(signUpRequest.getUuid());
+        user.setUid(signUpRequest.getUuid());
         user.setProvider(OAuth2Provider.LOCAL);
         user.setProfile(getProfile(signUpRequest));
+        user.setFirstName(signUpRequest.getFirstName());
+        user.setLastName(signUpRequest.getLastName());
         return user;
     }
 
