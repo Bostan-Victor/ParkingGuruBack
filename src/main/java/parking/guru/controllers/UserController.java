@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class UserController {
 
-    @GetMapping(path = "/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("");
+    @GetMapping("/test")
+    public String test() {
+        return "test";
     }
-
-
 }

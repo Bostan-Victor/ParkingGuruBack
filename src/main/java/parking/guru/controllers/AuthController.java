@@ -48,7 +48,7 @@ public class AuthController {
 
     private String authenticateAndGetToken(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        return tokenProvider.generate(authentication);
+        return tokenProvider.generate(authentication, true);
     }
 
     private User mapSignUpRequestToUser(SignUpRequest signUpRequest) {
