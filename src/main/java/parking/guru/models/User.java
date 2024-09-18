@@ -30,12 +30,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Added firstName and lastName fields
     @Column(nullable = false)
     private String firstName;
 
     @Column(nullable = false)
     private String lastName;
 
+    // UID Field
     @Column(nullable = false, unique = true)
     private String uid;
 

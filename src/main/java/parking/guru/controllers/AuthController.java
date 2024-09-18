@@ -1,75 +1,78 @@
 package parking.guru.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import parking.guru.config.security.TokenProvider;
-import parking.guru.config.security.oauth2.OAuth2Provider;
-import parking.guru.dtos.AuthResponse;
-import parking.guru.dtos.LoginRequest;
-import parking.guru.dtos.SignUpRequest;
+import parking.guru.dtos.CreateProfileInput;
+import parking.guru.dtos.UpdateProfileInput;
 import parking.guru.models.Profile;
-import parking.guru.models.User;
-import parking.guru.models.enums.Role;
-import parking.guru.services.UserService;
+import parking.guru.services.ProfileService;
 
-@RequiredArgsConstructor
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/profiles")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final TokenProvider tokenProvider;
+    private final ProfileService profileService;
 
-    @PostMapping("/authenticate")
-    public AuthResponse login(@RequestBody LoginRequest loginRequest) {
-        String token = authenticateAndGetToken(loginRequest.getEmail(), loginRequest.getPassword());
-        return new AuthResponse(token);
+    // REST - Create a profile
+    @PostMapping("/create")
+    public ResponseEntity<Profile> createProfile(@RequestBody CreateProfileInput input) {
+        Profile profile = new Profile();
+        profile.setFirstName(input.getFirstName());
+        profile.setLastName(input.getLastName());
+        profile.setIsVerified(input.getIsVerified());
+
+        Profile savedProfile = profileService.saveProfile(profile);
+        return ResponseEntity.ok(savedProfile);
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/register")
-    public AuthResponse signUp(@RequestBody SignUpRequest signUpRequest) {
-        if (userService.hasUserWithEmail(signUpRequest.getEmail())) {
-            throw new RuntimeException(String.format("Email %s already been used", signUpRequest.getEmail()));
+    // REST - Update a profile
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Profile> updateProfile(@PathVariable Long id, @RequestBody UpdateProfileInput input) {
+        Profile profile = profileService.getProfileById(id)
+                .orElseThrow(() -> new RuntimeException("Profile not found"));
+
+        if (input.getFirstName() != null) {
+            profile.setFirstName(input.getFirstName());
+        }
+        if (input.getLastName() != null) {
+            profile.setLastName(input.getLastName());
+        }
+        if (input.getIsVerified() != null) {
+            profile.setIsVerified(input.getIsVerified());
         }
 
-        userService.saveUser(mapSignUpRequestToUser(signUpRequest));
-
-        String token = authenticateAndGetToken(signUpRequest.getEmail(), signUpRequest.getPassword());
-        return new AuthResponse(token);
+        Profile updatedProfile = profileService.saveProfile(profile);
+        return ResponseEntity.ok(updatedProfile);
     }
 
-    private String authenticateAndGetToken(String username, String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        return tokenProvider.generate(authentication);
+    // REST - Delete a profile
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Boolean> deleteProfile(@PathVariable Long id) {
+        profileService.deleteProfile(id);
+        return ResponseEntity.ok(true);
     }
 
-    private User mapSignUpRequestToUser(SignUpRequest signUpRequest) {
-        User user = new User();
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setEmail(signUpRequest.getEmail());
-        user.setRole(Role.USER);
-        user.setPhoneNumber(signUpRequest.getPhoneNumber());
-        user.setUid(signUpRequest.getUuid());
-        user.setProvider(OAuth2Provider.LOCAL);
-        user.setProfile(getProfile(signUpRequest));
-        user.setFirstName(signUpRequest.getFirstName());
-        user.setLastName(signUpRequest.getLastName());
-        return user;
+    // REST - Get all profiles
+    @GetMapping
+    public ResponseEntity<List<Profile>> getAllProfiles() {
+        List<Profile> profiles = profileService.getAllProfiles();
+        if (profiles.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(profiles);
     }
 
-    private static Profile getProfile(SignUpRequest signUpRequest) {
-        Profile profile = new Profile();
-        profile.setFirstName(signUpRequest.getFirstName());
-        profile.setLastName(signUpRequest.getLastName());
-        profile.setIsVerified(false);
-        return profile;
+    // REST - Get profile by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Profile> getProfileById(@PathVariable Long id) {
+        Optional<Profile> profile = profileService.getProfileById(id);
+        return profile.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
