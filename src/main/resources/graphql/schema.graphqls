@@ -4,6 +4,7 @@ type Query {
     checkReservationStatusByPlateNumber(plateNumber: String!): ReservationStatus
     allReservations: [Reservation]
     reservationById(id: ID!): Reservation
+    reservationByUserId(id: ID!): Reservation
 
     allUsers: [User]
     userById(id: Int!): User
