@@ -11,6 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import parking.guru.config.security.TokenProvider;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 @Component
@@ -26,11 +27,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String targetUrl =
-                determineTargetUrl(request, response, authentication);
-
-        String token = tokenProvider.generate(authentication);
-        targetUrl = UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        String token = tokenProvider.generate(authentication, false);
+        response.setHeader("Authorization", "Bearer" + token);
+            getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/test/test");
     }
 }
