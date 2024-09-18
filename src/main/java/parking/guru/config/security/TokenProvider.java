@@ -8,13 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Component;
+import parking.guru.config.security.oauth2.OAuth2Provider;
+import parking.guru.models.enums.Role;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,13 +27,24 @@ public class TokenProvider {
     @Value("${app.jwt.expiration.minutes}")
     private Long jwtExpirationMinutes;
 
-    public String generate(Authentication authentication) {
-        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+    public String generate(Authentication authentication, boolean useCasting) {
+        CustomUserDetails user;
+        List<String> roles;
+        if (useCasting) {
+            user = (CustomUserDetails) authentication.getPrincipal();
+            roles = user.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
 
-        List<String> roles = user.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        } else {
+            DefaultOidcUser oauthUser = (DefaultOidcUser) authentication.getPrincipal();
+            user = CustomUserDetails.builder()
+                    .email(oauthUser.getEmail())
+                    .provider(OAuth2Provider.GOOGLE)
+                    .build();
+            roles = Collections.singletonList(Role.USER.toString());
+        }
 
         byte[] signingKey = jwtSecret.getBytes();
 
@@ -50,7 +61,6 @@ public class TokenProvider {
                 .subject(user.getUsername())
                 .claim("role", roles)
                 .claim("name", user.getName())
-                .claim("preferred_username", user.getUsername())
                 .compact();
     }
 
@@ -79,6 +89,6 @@ public class TokenProvider {
     }
 
     public static final String TOKEN_TYPE = "JWT";
-    public static final String TOKEN_ISSUER = "order-api";
-    public static final String TOKEN_AUDIENCE = "order-app";
+    public static final String TOKEN_ISSUER = "parking-guru-api";
+    public static final String TOKEN_AUDIENCE = "parking-app";
 }

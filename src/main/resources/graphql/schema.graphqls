@@ -1,0 +1,44 @@
+type Query {
+    reservationHistory(userId: ID!): [Reservation]
+    activeReservation(userId: ID!): Reservation
+    checkReservationStatusByPlateNumber(plateNumber: String!): ReservationStatus
+}
+
+type Mutation {
+    createReservation(input: CreateReservationInput!): Reservation
+}
+
+input CreateReservationInput {
+    phoneNumber: String!
+    latitude: String!
+    longitude: String!
+    plateNumber: String!
+}
+
+type Reservation {
+    id: ID
+    startDateTime: String
+    endDateTime: String
+    plateNumber: String
+    latitude: String
+    longitude: String
+    status: String
+    user: User
+}
+
+type User {
+    id: ID
+    email: String
+    firstName: String
+    lastName: String
+    phoneNumber: String
+    uid: String
+    role: String
+}
+
+enum ReservationStatus {
+    UNCHECKED
+    CHECKED
+    TICKETED
+    NO_TICKET
+}

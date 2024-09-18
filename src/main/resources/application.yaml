@@ -21,6 +21,6 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 app:
   jwt:
-    secret: value
+    secret: dsaddsajkhdkjasldjlkasgljdgjksadgsagkldgksajdglksagkljdlgkas321312vdscvdsvc000000
     expiration:
       minutes: 10

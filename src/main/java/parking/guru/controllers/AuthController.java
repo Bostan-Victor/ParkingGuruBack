@@ -12,6 +12,7 @@ import parking.guru.config.security.oauth2.OAuth2Provider;
 import parking.guru.dtos.AuthResponse;
 import parking.guru.dtos.LoginRequest;
 import parking.guru.dtos.SignUpRequest;
+import parking.guru.models.Profile;
 import parking.guru.models.User;
 import parking.guru.models.enums.Role;
 import parking.guru.services.UserService;
@@ -33,7 +34,7 @@ public class AuthController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public AuthResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         if (userService.hasUserWithEmail(signUpRequest.getEmail())) {
             throw new RuntimeException(String.format("Email %s already been used", signUpRequest.getEmail()));
@@ -41,13 +42,13 @@ public class AuthController {
 
         userService.saveUser(mapSignUpRequestToUser(signUpRequest));
 
-        String token = authenticateAndGetToken(signUpRequest.getUsername(), signUpRequest.getPassword());
+        String token = authenticateAndGetToken(signUpRequest.getEmail(), signUpRequest.getPassword());
         return new AuthResponse(token);
     }
 
     private String authenticateAndGetToken(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        return tokenProvider.generate(authentication);
+        return tokenProvider.generate(authentication, true);
     }
 
     private User mapSignUpRequestToUser(SignUpRequest signUpRequest) {
@@ -55,7 +56,18 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEmail(signUpRequest.getEmail());
         user.setRole(Role.USER);
+        user.setPhoneNumber(signUpRequest.getPhoneNumber());
+        user.setUID(signUpRequest.getUuid());
         user.setProvider(OAuth2Provider.LOCAL);
+        user.setProfile(getProfile(signUpRequest));
         return user;
+    }
+
+    private static Profile getProfile(SignUpRequest signUpRequest) {
+        Profile profile = new Profile();
+        profile.setFirstName(signUpRequest.getFirstName());
+        profile.setLastName(signUpRequest.getLastName());
+        profile.setIsVerified(false);
+        return profile;
     }
 }
