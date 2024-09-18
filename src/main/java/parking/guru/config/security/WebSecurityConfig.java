@@ -47,7 +47,7 @@ public class WebSecurityConfig {
         return http
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/graphql").authenticated()
+                        .requestMatchers("/graphql").permitAll()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .userInfoEndpoint(c -> c.userService(customOauth2UserService))
