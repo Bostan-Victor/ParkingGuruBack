@@ -110,4 +110,5 @@ public class Reservation {
     public void setVehicles(List<Vehicle> vehicles) {
         this.vehicles = vehicles;
     }
+
 }

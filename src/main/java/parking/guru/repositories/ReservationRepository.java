@@ -22,4 +22,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r FROM Reservation r WHERE r.status = :status")
     Optional<Reservation> findByStatus(@Param("status") Status status);
+
+    @Query("SELECT r FROM Reservation r WHERE r.user.id = :id AND r.endDateTime IS NULL ")
+    Optional<Reservation> findActiveByUserId(Long id);
+
+    @Query("SELECT r FROM Reservation r WHERE r.user.id = :id AND r.endDateTime IS NOT NULL ")
+    List<Reservation> findAllByUserId(Long id);
 }

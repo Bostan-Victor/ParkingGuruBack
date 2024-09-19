@@ -2,6 +2,7 @@ type Query {
     reservationHistory(userId: ID!): [Reservation]
     activeReservation(userId: ID!): Reservation
     checkReservationStatusByPlateNumber(plateNumber: String!): ReservationStatus
+
     allReservations: [Reservation]
     reservationById(id: ID!): Reservation
     reservationByUserId(id: ID!): Reservation

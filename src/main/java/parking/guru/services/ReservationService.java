@@ -47,7 +47,15 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public List<Reservation> getAllReservationsByUserId(Long userId) {
+        return reservationRepository.findAllByUserId(userId);
+    }
+
     public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
+    }
+
+    public Optional<Reservation> getReservationByUserId(Long id) {
+        return reservationRepository.findActiveByUserId(id);
     }
 }
