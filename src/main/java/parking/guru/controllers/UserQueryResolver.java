@@ -12,18 +12,23 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class UserQueryResolver {
+
     private final UserService userService;
 
-    // Query: Get all users
     @QueryMapping
-    public List<User> getAllUsers() {
+    public List<User> allUsers() {
         return userService.getAllUsers();
     }
 
-    // Query: Get a user by ID
     @QueryMapping
-    public User getUserById(@Argument Long id) {
+    public User userByEmail(@Argument String email) {
+        return userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
+
+    @QueryMapping
+    public User userById(@Argument Long id) {
         return userService.getUserById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with this ID" + id));
     }
 }
