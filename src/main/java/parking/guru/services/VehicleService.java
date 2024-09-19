@@ -1,6 +1,7 @@
 package parking.guru.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import parking.guru.models.Vehicle;
 import parking.guru.repositories.VehicleRepository;
@@ -22,6 +23,7 @@ public class VehicleService {
         return vehicleRepository.findById(id);
     }
 
+    @PreAuthorize("hasAuthority('POLICE')")
     public Optional<Vehicle> getVehicleByPlateNumber(String plateNumber) {
         return vehicleRepository.findByPlateNumber(plateNumber);
     }

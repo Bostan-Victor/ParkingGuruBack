@@ -1,6 +1,7 @@
 package parking.guru.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import parking.guru.models.Reservation;
 import parking.guru.models.enums.Status;

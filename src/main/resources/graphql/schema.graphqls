@@ -72,6 +72,7 @@ type User {
     role: String
     profile: Profile
     reservations: [Reservation]
+    vehicle: [Vehicle!]
 }
 
 type Profile {
@@ -86,7 +87,7 @@ type Vehicle {
     id: ID
     plateNumber: String
     type: String
-    users: [User]
+    users: [User!]
     reservations: [Reservation]
 }
 

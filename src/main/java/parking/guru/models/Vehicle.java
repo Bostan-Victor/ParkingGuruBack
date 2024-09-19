@@ -3,7 +3,9 @@ package parking.guru.models;
 import jakarta.persistence.*;
 import parking.guru.models.enums.Type;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "vehicle")
@@ -20,7 +22,7 @@ public class Vehicle {
     private Type type;
 
     @ManyToMany(mappedBy = "vehicles")
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -28,7 +30,7 @@ public class Vehicle {
             joinColumns = @JoinColumn(name = "vehicle_id"),
             inverseJoinColumns = @JoinColumn(name = "reservation_id")
     )
-    private List<Reservation> reservations;
+    private Set<Reservation> reservations;
 
     public Long getId() {
         return id;
@@ -62,11 +64,11 @@ public class Vehicle {
         this.users = users;
     }
 
-    public List<Reservation> getReservations() {
+    public Set<Reservation> getReservations() {
         return reservations;
     }
 
-    public void setReservations(List<Reservation> reservations) {
+    public void setReservations(Set<Reservation> reservations) {
         this.reservations = reservations;
     }
 }

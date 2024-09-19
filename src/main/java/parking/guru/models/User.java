@@ -7,6 +7,7 @@ import parking.guru.models.enums.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_entity")
@@ -67,5 +68,5 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "vehicle_id")
     )
-    private List<Vehicle> vehicles;
+    private Set<Vehicle> vehicles;
 }
