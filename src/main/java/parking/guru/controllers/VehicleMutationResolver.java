@@ -14,6 +14,10 @@ import parking.guru.services.VehicleService;
 import parking.guru.dtos.CreateVehicleInput;
 import parking.guru.dtos.UpdateVehicleInput;
 
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Set;
+
 @Controller
 @RequiredArgsConstructor
 public class VehicleMutationResolver {
@@ -26,20 +30,20 @@ public class VehicleMutationResolver {
         CustomUserDetails customUserDetails =
                 (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = customUserDetails.getId();
-        User user = userService.getUserById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Vehicle vehicle = new Vehicle();
-        vehicle.setPlateNumber(input.getPlateNumber());
-        vehicle.setType(Type.valueOf(input.getType()));
-
-        vehicle.getUsers().add(user);
-        user.getVehicles().add(vehicle);
-
-        vehicleService.saveVehicle(vehicle);
-        userService.saveUser(user);
-
-        return vehicle;
+        Optional<Vehicle> carEntity = userService.getUserById(userId).map(userEntity -> {
+         Optional<Vehicle> vehicle =  vehicleService.getVehicle(input.getPlateNumber());
+         if (vehicle.isPresent()) {
+             userEntity.getVehicles().add(vehicle.get());
+             userService.saveUser(userEntity);
+             return vehicle.get();
+         }
+         Vehicle newVehicle = new Vehicle();
+         newVehicle.setType(Type.valueOf(input.getType()));
+         newVehicle.setPlateNumber(input.getPlateNumber());
+         userEntity.getVehicles().add(newVehicle);
+         return vehicleService.saveVehicle(newVehicle);
+    });
+        return carEntity.get();
     }
 
     @MutationMapping

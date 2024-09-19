@@ -2,6 +2,7 @@ package parking.guru.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import parking.guru.config.security.oauth2.OAuth2Provider;
 import parking.guru.models.enums.Role;
 
@@ -63,10 +64,5 @@ public class User {
     private OAuth2Provider provider;
 
     @ManyToMany
-    @JoinTable(
-            name = "user_vehicles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "vehicle_id")
-    )
     private Set<Vehicle> vehicles;
 }

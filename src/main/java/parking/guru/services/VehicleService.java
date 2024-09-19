@@ -28,6 +28,10 @@ public class VehicleService {
         return vehicleRepository.findByPlateNumber(plateNumber);
     }
 
+    public Optional<Vehicle> getVehicle(String plateNumber) {
+        return vehicleRepository.findByPlateNumber(plateNumber);
+    }
+
     public Vehicle saveVehicle(Vehicle vehicle) {
         return vehicleRepository.save(vehicle);
     }
