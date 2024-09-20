@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.util.RedirectUrlBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import parking.guru.config.security.TokenProvider;
@@ -28,7 +29,14 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String token = tokenProvider.generate(authentication, false);
-        response.setHeader("Authorization", "Bearer" + token);
-            getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/test/test");
+        response.setHeader("Authorization", "Bearer " + token);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"token\": \"" + token + "\"}");
+
+        System.out.println("Generated token: " + token);
+        //RedirectUrlBuilder url = RedirectUrlBuilder// Log the token for debugging
+        getRedirectStrategy().sendRedirect(request, response, "/hello-world");
     }
 }

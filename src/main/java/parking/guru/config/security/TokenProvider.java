@@ -30,21 +30,23 @@ public class TokenProvider {
     public String generate(Authentication authentication, boolean useCasting) {
         CustomUserDetails user;
         List<String> roles;
-        if (useCasting) {
-            user = (CustomUserDetails) authentication.getPrincipal();
-            roles = user.getAuthorities()
-                    .stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList());
-
-        } else {
+        if (authentication.getPrincipal() instanceof DefaultOidcUser) {
             DefaultOidcUser oauthUser = (DefaultOidcUser) authentication.getPrincipal();
             user = CustomUserDetails.builder()
                     .email(oauthUser.getEmail())
                     .provider(OAuth2Provider.GOOGLE)
                     .build();
-            roles = Collections.singletonList(Role.USER.toString());
+            roles = Collections.singletonList(Role.USER.toString()); // Default role for OAuth2 user
+        } else if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            user = (CustomUserDetails) authentication.getPrincipal();
+            roles = user.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+        } else {
+            throw new IllegalArgumentException("Unexpected user type: " + authentication.getPrincipal().getClass());
         }
+
 
         byte[] signingKey = jwtSecret.getBytes();
 
