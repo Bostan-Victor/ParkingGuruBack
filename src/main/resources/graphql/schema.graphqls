@@ -2,8 +2,11 @@ type Query {
     reservationHistory(userId: ID!): [Reservation]
     activeReservation(userId: ID!): Reservation
     checkReservationStatusByPlateNumber(plateNumber: String!): ReservationStatus
+
     allReservations: [Reservation]
     reservationById(id: ID!): Reservation
+    reservationByUserId(id: ID!): Reservation
+    allReservationByUserId(id: ID!): [Reservation!]
 
     allUsers: [User]
     userById(id: Int!): User
@@ -11,10 +14,6 @@ type Query {
 
     allProfiles: [Profile]
     profileById(id: ID!): Profile
-
-    allVehicles: [Vehicle]
-    vehicleById(id: ID!): Vehicle
-    vehicleByPlateNumber(plateNumber: String!): Vehicle
 }
 
 type Mutation {
@@ -29,10 +28,6 @@ type Mutation {
     createProfile(input: CreateProfileInput!): Profile
     updateProfile(id: ID!, input: UpdateProfileInput!): Profile
     deleteProfile(id: ID!): Boolean
-
-    createVehicle(input: CreateVehicleInput!): Vehicle
-    updateVehicle(id: ID!, input: UpdateVehicleInput!): Vehicle
-    deleteVehicle(id: ID!): Boolean
 }
 
 input CreateReservationInput {
@@ -80,14 +75,6 @@ type Profile {
     user: User
 }
 
-type Vehicle {
-    id: ID
-    plateNumber: String
-    type: String
-    users: [User]
-    reservations: [Reservation]
-}
-
 input CreateUserInput {
     email: String!
     firstName: String!
@@ -117,15 +104,6 @@ input UpdateProfileInput {
     isVerified: Boolean
 }
 
-input CreateVehicleInput {
-    plateNumber: String!
-    type: String!
-}
-
-input UpdateVehicleInput {
-    plateNumber: String
-    type: String
-}
 
 enum ReservationStatus {
     UNCHECKED

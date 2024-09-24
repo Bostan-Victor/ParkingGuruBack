@@ -1,5 +1,6 @@
 package parking.guru.services;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import parking.guru.models.User;
 import parking.guru.repositories.UserRepository;

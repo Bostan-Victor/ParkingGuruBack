@@ -2,11 +2,13 @@ package parking.guru.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import parking.guru.config.security.oauth2.OAuth2Provider;
 import parking.guru.models.enums.Role;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_entity")
@@ -30,12 +32,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // Added firstName and lastName fields
     @Column(nullable = false)
     private String firstName;
 
     @Column(nullable = false)
     private String lastName;
 
+    // UID Field
     @Column(nullable = false, unique = true)
     private String uid;
 
@@ -58,12 +62,4 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_vehicles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "vehicle_id")
-    )
-    private List<Vehicle> vehicles;
 }

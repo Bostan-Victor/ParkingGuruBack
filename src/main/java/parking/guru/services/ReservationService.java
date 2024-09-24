@@ -1,6 +1,7 @@
 package parking.guru.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import parking.guru.models.Reservation;
 import parking.guru.models.enums.Status;
@@ -47,7 +48,15 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public List<Reservation> getAllReservationsByUserId(Long userId) {
+        return reservationRepository.findAllByUserId(userId);
+    }
+
     public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
+    }
+
+    public Optional<Reservation> getReservationByUserId(Long id) {
+        return reservationRepository.findActiveByUserId(id);
     }
 }
