@@ -71,4 +71,5 @@ public class Vehicle {
     public void setReservations(Set<Reservation> reservations) {
         this.reservations = reservations;
     }
+
 }
