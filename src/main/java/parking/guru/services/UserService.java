@@ -1,5 +1,6 @@
 package parking.guru.services;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import parking.guru.models.User;
 import parking.guru.repositories.UserRepository;
@@ -25,25 +26,17 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
-
-
-    public Optional<User> getUserByUserEmail(String username) {
-        return userRepository.findByUserEmail(username);
-    }
-
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
     public boolean hasUserWithEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
-    public User validateAndGetUserByUsername(String username) {
-        return getUserByUserEmail(username)
-                .orElseThrow(() -> new RuntimeException(String.format("User with username %s not found", username)));
+    public User validateAndGetUserByEmail(String email) {
+        return getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException(String.format("User with email %s not found", email)));
     }
 
     public User saveUser(User user) {
@@ -52,7 +45,17 @@ public class UserService {
 
     public User findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User with phone number not found"));
+    }
+
+    public void deleteUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("User with ID " + id + " not found.");
+        }
     }
 
 }
+

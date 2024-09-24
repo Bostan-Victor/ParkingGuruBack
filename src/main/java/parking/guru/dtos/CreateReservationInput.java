@@ -1,4 +1,4 @@
-package parking.guru.models;
+package parking.guru.dtos;
 
 import lombok.Data;
 
