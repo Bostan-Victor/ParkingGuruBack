@@ -1,6 +1,5 @@
 package parking.guru.config.security.oauth2;
 
-
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -43,7 +42,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User upsertUser(CustomUserDetails customUserDetails) {
-        Optional<User> userOptional = userService.getUserByUserEmail(customUserDetails.getUsername());
+        Optional<User> userOptional = userService.getUserByEmail(customUserDetails.getUsername());
         User user;
         if (userOptional.isEmpty()) {
             user = new User();

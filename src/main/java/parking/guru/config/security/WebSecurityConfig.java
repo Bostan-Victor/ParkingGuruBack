@@ -50,6 +50,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/graphql").permitAll()
                         .requestMatchers("/hello-world").permitAll()  // Allow access to hello-world
                         .anyRequest().authenticated()
+                        .requestMatchers("/graphql").authenticated()
+                        .requestMatchers("/api/**").authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .userInfoEndpoint(c -> c.userService(customOauth2UserService))
@@ -59,6 +61,7 @@ public class WebSecurityConfig {
                 .logout(l -> l.logoutSuccessUrl("/").permitAll())
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .build();
