@@ -16,25 +16,21 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
 
-    // Fetch all profiles
     @PreAuthorize("hasAuthority('POLICE')")
     public List<Profile> getAllProfiles() {
         return profileRepository.findAll();
     }
 
-    // Fetch profile by ID
+
     @PreAuthorize("hasAuthority('POLICE')")
     public Optional<Profile> getProfileById(Long id) {
-//        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return profileRepository.findById(id);
     }
 
-    // Save or update profile
     public Profile saveProfile(Profile profile) {
         return profileRepository.save(profile);
     }
 
-    // Delete profile by ID
     public void deleteProfile(Long id) {
         Optional<Profile> profile = profileRepository.findById(id);
         if (profile.isPresent()) {

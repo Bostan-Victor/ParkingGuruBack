@@ -62,7 +62,4 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;
-
-    @ManyToMany
-    private Set<Vehicle> vehicles;
 }

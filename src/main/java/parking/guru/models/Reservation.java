@@ -16,7 +16,7 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime startDateTime = LocalDateTime.now();
 
-    @Column()
+    @Column
     private LocalDateTime endDateTime;
 
     @Column(nullable = false)
@@ -35,9 +35,6 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @ManyToMany(mappedBy = "reservations")
-    private List<Vehicle> vehicles;
 
     public Long getId() {
         return id;
@@ -101,14 +98,6 @@ public class Reservation {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<Vehicle> getVehicles() {
-        return vehicles;
-    }
-
-    public void setVehicles(List<Vehicle> vehicles) {
-        this.vehicles = vehicles;
     }
 
 }
