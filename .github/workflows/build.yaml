@@ -3,10 +3,10 @@ name: CI Pipeline for Spring Boot Gradle Project
 on:
   push:
     branches:
-      - main  
+      - renat-test  
   pull_request:
     branches:
-      - main  
+      - renat-test  
 
 jobs:
   build:
