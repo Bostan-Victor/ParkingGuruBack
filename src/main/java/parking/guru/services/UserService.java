@@ -59,5 +59,9 @@ public class UserService {
         }
     }
 
+    public boolean isUserVerified(String email) {
+        User user = validateAndGetUserByEmail(email);
+        return user.getProfile().getIsVerified();
+    }
 }
 

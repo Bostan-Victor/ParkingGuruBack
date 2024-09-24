@@ -6,12 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import parking.guru.dtos.OTPVerificationRequest;
 import parking.guru.dtos.PhoneNumberRequest;
+import parking.guru.models.Profile;
+import parking.guru.models.User;
+import parking.guru.services.ProfileService;
+import parking.guru.services.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -27,8 +32,15 @@ public class PhoneNumberVerificationController {
     @Value("${twilio.authToken}")
     private String authToken;
 
-    private static final String PENDING = "pending";
     private static final String APPROVED = "approved";
+
+    private final UserService userService;
+    private final ProfileService profileService;
+
+    public PhoneNumberVerificationController(UserService userService, ProfileService profileService) {
+        this.userService = userService;
+        this.profileService = profileService;
+    }
 
     @GetMapping(value = "/generateOTP")
     public ResponseEntity<String> generateOTP(@RequestBody PhoneNumberRequest request){
@@ -62,10 +74,20 @@ public class PhoneNumberVerificationController {
                     .setTo(phoneNumber)
                     .setCode(code)
                     .create();
-            if (verificationCheck.getStatus().equals(PENDING)) {
-                return new ResponseEntity<>("Verification failed.", HttpStatus.BAD_REQUEST);
+
+            // Check the status of the verification
+            if (APPROVED.equals(verificationCheck.getStatus())) {
+                String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+                User user = userService.validateAndGetUserByEmail(userEmail);
+
+                // Set isVerified to true in the user's profile
+                Profile profile = user.getProfile();
+                profile.setIsVerified(true);
+                profileService.saveProfile(profile);  // Make sure you have a saveProfile method in ProfileService
+
+                return new ResponseEntity<>("This user's verification has been completed successfully", HttpStatus.OK);
             } else {
-                return ResponseEntity.of(Optional.of("This user's verification has been completed successfully"));
+                return new ResponseEntity<>("Verification failed. Invalid OTP.", HttpStatus.BAD_REQUEST);
             }
 
         } catch (Exception e) {

@@ -7,6 +7,7 @@ type Query {
     reservationById(id: ID!): Reservation
     reservationByUserId(id: ID!): Reservation
     allReservationByUserId(id: ID!): [Reservation!]
+    getActiveReservation: ActiveReservationResponse
 
     allUsers: [User]
     userById(id: Int!): User
@@ -14,6 +15,7 @@ type Query {
 
     allProfiles: [Profile]
     profileById(id: ID!): Profile
+    getUserProfile: UserProfileResponse
 }
 
 type Mutation {
@@ -109,6 +111,19 @@ type EndReservationResponse {
     totalPrice: Float
 }
 
+type ActiveReservationResponse {
+    success: Boolean
+    message: String
+    elapsedTime: Int
+    reservation: Reservation
+}
+
+type UserProfileResponse {
+    firstName: String
+    lastName: String
+    email: String
+    phoneNumber: String
+}
 
 enum ReservationStatus {
     UNCHECKED
