@@ -16,22 +16,14 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
 
-<<<<<<< HEAD
-=======
-    // Fetch all profiles
     @PreAuthorize("hasAuthority('POLICE')")
->>>>>>> origin/victor-dev
     public List<Profile> getAllProfiles() {
         return profileRepository.findAll();
     }
 
-<<<<<<< HEAD
-=======
-    // Fetch profile by ID
+
     @PreAuthorize("hasAuthority('POLICE')")
->>>>>>> origin/victor-dev
     public Optional<Profile> getProfileById(Long id) {
-//        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return profileRepository.findById(id);
     }
 
