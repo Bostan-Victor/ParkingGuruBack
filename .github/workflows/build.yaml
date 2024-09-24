@@ -22,6 +22,9 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
@@ -42,7 +45,6 @@ jobs:
           name: test-results
           path: build/test-results/test
 
-      # Optional: Upload build artifacts (jar)
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
