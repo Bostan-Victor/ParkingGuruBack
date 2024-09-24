@@ -21,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         // Use getUserByEmail instead of getUserByUserEmail
-        User user = userService.getUserByEmail(username)
+        User user = userService.getUserByPhponeNumber(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
         return mapUserToCustomUserDetails(user, authorities);

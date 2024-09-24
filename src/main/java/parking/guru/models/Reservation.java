@@ -23,10 +23,7 @@ public class Reservation {
     private String plateNumber;
 
     @Column(nullable = false)
-    private String latitude;
-
-    @Column(nullable = false)
-    private String longitude;
+    private String address;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -68,20 +65,12 @@ public class Reservation {
         this.plateNumber = plateNumber;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getAddress() {
+        return address;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Status getStatus() {
@@ -99,5 +88,4 @@ public class Reservation {
     public void setUser(User user) {
         this.user = user;
     }
-
 }

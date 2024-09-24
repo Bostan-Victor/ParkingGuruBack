@@ -27,6 +27,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
 
+    private static Profile getProfile(SignUpRequest signUpRequest) {
+        Profile profile = new Profile();
+        profile.setFirstName(signUpRequest.getFirstName());
+        profile.setLastName(signUpRequest.getLastName());
+        profile.setIsVerified(false);
+        return profile;
+    }
+
     @PostMapping("/authenticate")
     public AuthResponse login(@RequestBody LoginRequest loginRequest) {
         String token = authenticateAndGetToken(loginRequest.getEmail(), loginRequest.getPassword());
@@ -63,13 +71,5 @@ public class AuthController {
         user.setFirstName(signUpRequest.getFirstName());
         user.setLastName(signUpRequest.getLastName());
         return user;
-    }
-
-    private static Profile getProfile(SignUpRequest signUpRequest) {
-        Profile profile = new Profile();
-        profile.setFirstName(signUpRequest.getFirstName());
-        profile.setLastName(signUpRequest.getLastName());
-        profile.setIsVerified(false);
-        return profile;
     }
 }

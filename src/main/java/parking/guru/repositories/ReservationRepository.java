@@ -17,8 +17,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Reservation findByUserIdAndEndDateTimeIsNull(Long userId);
 
-    @Query("SELECT r FROM Reservation r WHERE r.latitude = :latitude AND r.longitude = :longitude")
-    Optional<Reservation> findByLocation(@Param("latitude") String latitude, @Param("longitude") String longitude);
+    // Update the query to use 'address' instead of 'latitude' and 'longitude'
+    @Query("SELECT r FROM Reservation r WHERE r.address = :address")
+    Optional<Reservation> findByAddress(@Param("address") String address);
 
     @Query("SELECT r FROM Reservation r WHERE r.status = :status")
     Optional<Reservation> findByStatus(@Param("status") Status status);

@@ -28,6 +28,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> getUserByPhponeNumber(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public boolean hasUserWithEmail(String email) {
         return userRepository.existsByEmail(email);
     }

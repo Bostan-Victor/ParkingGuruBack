@@ -20,6 +20,7 @@ type Mutation {
     createReservation(input: CreateReservationInput!): Reservation
     updateReservation(id: ID!, input: UpdateReservationInput!): Reservation
     deleteReservation(id: ID!): Boolean
+    endReservation: EndReservationResponse
 
     createUser(input: CreateUserInput!): User
     updateUser(id: ID!, input: UpdateUserInput!): User
@@ -31,15 +32,12 @@ type Mutation {
 }
 
 input CreateReservationInput {
-    phoneNumber: String!
-    latitude: String!
-    longitude: String!
+    address: String!
     plateNumber: String!
 }
 
 input UpdateReservationInput {
-    latitude: String
-    longitude: String
+    address: String
     endDateTime: String
     status: ReservationStatus
 }
@@ -49,8 +47,7 @@ type Reservation {
     startDateTime: String
     endDateTime: String
     plateNumber: String
-    latitude: String
-    longitude: String
+    address: String
     status: ReservationStatus
     user: User
 }
@@ -102,6 +99,14 @@ input UpdateProfileInput {
     firstName: String
     lastName: String
     isVerified: Boolean
+}
+
+type EndReservationResponse {
+    id: ID
+    plateNumber: String
+    startDateTime: String
+    endDateTime: String
+    totalPrice: Float
 }
 
 
