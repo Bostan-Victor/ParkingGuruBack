@@ -39,36 +39,4 @@ public class ProfileService {
             throw new RuntimeException("Profile with ID " + id + " not found.");
         }
     }
-
-    public Optional<Profile> getProfileById(Long id) {
-        return profileRepository.findById(id);
-    }
-
-    public List<Profile> getAllProfiles() {
-        return profileRepository.findAll();
-    }
-
-    public Profile saveProfile(Profile profile) {
-        return profileRepository.save(profile);
-    }
-
-    public Profile updateProfile(Long id, String firstName, String lastName, Boolean isVerified) {
-        Optional<Profile> existingProfile = profileRepository.findById(id);
-        if (existingProfile.isPresent()) {
-            Profile profile = existingProfile.get();
-            profile.setFirstName(firstName);
-            profile.setLastName(lastName);
-            profile.setIsVerified(isVerified);
-            return profileRepository.save(profile);
-        }
-        return null; // or throw an exception if preferred
-    }
-
-    public Boolean deleteProfile(Long id) {
-        if (profileRepository.existsById(id)) {
-            profileRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
 }
