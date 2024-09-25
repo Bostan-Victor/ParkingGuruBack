@@ -53,7 +53,7 @@ public class ReservationMutationResolver {
         User user = userService.validateAndGetUserByEmail(userEmail);
 
         // Find the active reservation (endDateTime is null)
-        Reservation activeReservation = reservationService.getActiveReservation(user.getId());
+        Reservation activeReservation = reservationService.getActiveReservation((long) user.getId());
         if (activeReservation == null) {
             throw new RuntimeException("No active reservation found for this user.");
         }
