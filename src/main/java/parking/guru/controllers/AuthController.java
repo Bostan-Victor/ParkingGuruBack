@@ -45,21 +45,6 @@ public class AuthController {
         return new AuthResponse(token);
     }
 
-    private String authenticateByEmail(String email, String password) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password));
-        return tokenProvider.generate(authentication);
-    }
-
-    private String authenticateByPhoneNumber(String phoneNumber, String password) {
-        // Find user by phone number and authenticate
-        User user = userService.findByPhoneNumber(phoneNumber);
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getEmail(), password)); // Authenticate with email
-        return tokenProvider.generate(authentication);
-    }
-
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     public AuthResponse signUp(@RequestBody SignUpRequest signUpRequest) {
