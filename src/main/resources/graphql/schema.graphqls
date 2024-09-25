@@ -50,6 +50,7 @@ type Reservation {
     endDateTime: String
     plateNumber: String
     address: String
+    totalPrice: Float
     status: ReservationStatus
     user: User
 }

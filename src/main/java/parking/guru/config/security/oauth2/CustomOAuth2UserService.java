@@ -37,7 +37,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         CustomUserDetails customUserDetails = oAuth2UserInfoExtractorOptional.get().extractUserInfo(oAuth2User);
         User user = upsertUser(customUserDetails);
-        customUserDetails.setId(user.getId());
+        customUserDetails.setId((long) user.getId());
         return customUserDetails;
     }
 

@@ -53,7 +53,7 @@ public class ReservationQueryResolver {
         User user = userService.validateAndGetUserByEmail(userEmail);
 
         // Find the active reservation where endDateTime is null
-        Optional<Reservation> activeReservation = Optional.ofNullable(reservationService.getActiveReservation(user.getId()));
+        Optional<Reservation> activeReservation = Optional.ofNullable(reservationService.getActiveReservation((long) user.getId()));
 
         if (activeReservation.isPresent()) {
             LocalDateTime now = LocalDateTime.now();

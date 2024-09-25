@@ -29,6 +29,17 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private Status status = Status.UNCHECKED;
 
+    @Column
+    private Double totalPrice;
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

@@ -21,7 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false, unique = true)
     private String phoneNumber;
@@ -53,9 +53,8 @@ public class User {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private Profile profile;
+    @Column(nullable = false)
+    private Boolean isVerified = false;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations;

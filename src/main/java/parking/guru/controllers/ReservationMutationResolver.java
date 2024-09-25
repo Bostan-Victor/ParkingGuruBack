@@ -6,6 +6,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import parking.guru.dtos.EndReservationResponse;
+import parking.guru.exceptions.ActiveReservationExistsException;
 import parking.guru.models.Reservation;
 import parking.guru.models.User;
 import parking.guru.models.enums.Status;
@@ -34,6 +35,11 @@ public class ReservationMutationResolver {
         String userEmail = authentication.getName();
         User user = userService.validateAndGetUserByEmail(userEmail);
 
+        Reservation activeReservation = reservationService.getActiveReservation((long) user.getId());
+        if (activeReservation != null) {
+            throw new ActiveReservationExistsException("User already has an active reservation.");
+        }
+
         // Create the reservation
         Reservation reservation = new Reservation();
         reservation.setUser(user);
@@ -41,7 +47,8 @@ public class ReservationMutationResolver {
         reservation.setAddress(input.getAddress());  // Use the new address field
         reservation.setStatus(Status.UNCHECKED);
         reservation.setStartDateTime(LocalDateTime.now());
-        reservation.setEndDateTime(null);  // Ensure endDateTime is null at creation
+        reservation.setEndDateTime(null);
+        reservation.setTotalPrice(null);
 
         return reservationService.saveReservation(reservation);
     }
@@ -53,7 +60,7 @@ public class ReservationMutationResolver {
         User user = userService.validateAndGetUserByEmail(userEmail);
 
         // Find the active reservation (endDateTime is null)
-        Reservation activeReservation = reservationService.getActiveReservation(user.getId());
+        Reservation activeReservation = reservationService.getActiveReservation((long) user.getId());
         if (activeReservation == null) {
             throw new RuntimeException("No active reservation found for this user.");
         }
@@ -67,6 +74,7 @@ public class ReservationMutationResolver {
         long minutes = duration.toMinutes();
         double totalPrice = minutes * PRICE_PER_MINUTE;
 
+        activeReservation.setTotalPrice(totalPrice);
         // Save the updated reservation
         reservationService.saveReservation(activeReservation);
 
@@ -76,7 +84,7 @@ public class ReservationMutationResolver {
                 activeReservation.getPlateNumber(),
                 activeReservation.getStartDateTime().toString(),
                 endDateTime.toString(),
-                totalPrice
+                activeReservation.getTotalPrice()
         );
     }
 
