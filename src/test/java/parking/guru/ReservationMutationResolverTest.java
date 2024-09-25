@@ -1,10 +1,11 @@
-package parking.guru.controllers;
+package parking.guru;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import parking.guru.controllers.ReservationMutationResolver;
 import parking.guru.dtos.CreateReservationInput;
 import parking.guru.dtos.UpdateReservationInput;
 import parking.guru.models.Reservation;

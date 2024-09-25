@@ -7,7 +7,7 @@ public class CustomGraphQLException extends GraphQLException {
         super(message);
     }
 
-//    public CustomGraphQLException(String message, Throwable cause) {
-//        super(message, cause);
-//    }
+    public CustomGraphQLException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
