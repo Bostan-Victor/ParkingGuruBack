@@ -3,7 +3,9 @@ package parking.guru.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import parking.guru.dtos.UserProfileResponse;
 import parking.guru.models.User;
 import parking.guru.services.UserService;
 import parking.guru.exceptions.CustomGraphQLException;
@@ -31,5 +33,18 @@ public class UserQueryResolver {
     @QueryMapping
     public List<User> allUsers() {
         return userService.getAllUsers();
+    }
+
+    @QueryMapping
+    public UserProfileResponse getUserProfile() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.validateAndGetUserByEmail(userEmail);
+
+        return new UserProfileResponse(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
     }
 }

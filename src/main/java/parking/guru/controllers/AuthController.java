@@ -15,7 +15,6 @@ import parking.guru.dtos.SignUpRequest;
 import parking.guru.exceptions.EmailAlreadyUsedException;
 import parking.guru.exceptions.PhoneNumberAlreadyUsedException;
 import parking.guru.exceptions.UuidAlreadyUsedException;
-import parking.guru.models.Profile;
 import parking.guru.models.User;
 import parking.guru.models.enums.Role;
 import parking.guru.services.UserService;
@@ -29,14 +28,6 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final TokenProvider tokenProvider;
-
-    private static Profile getProfile(SignUpRequest signUpRequest) {
-        Profile profile = new Profile();
-        profile.setFirstName(signUpRequest.getFirstName());
-        profile.setLastName(signUpRequest.getLastName());
-        profile.setIsVerified(false);
-        return profile;
-    }
 
     @PostMapping("/authenticate")
     public AuthResponse login(@RequestBody LoginRequest loginRequest) {
@@ -84,7 +75,6 @@ public class AuthController {
         user.setPhoneNumber(signUpRequest.getPhoneNumber());
         user.setUid(signUpRequest.getUuid());
         user.setProvider(OAuth2Provider.LOCAL);
-        user.setProfile(getProfile(signUpRequest));
         user.setFirstName(signUpRequest.getFirstName());
         user.setLastName(signUpRequest.getLastName());
         return user;
