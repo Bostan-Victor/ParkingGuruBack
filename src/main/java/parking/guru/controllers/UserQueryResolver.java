@@ -7,18 +7,24 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import parking.guru.dtos.IsUserPoliceResponse;
 import parking.guru.dtos.UserProfileResponse;
+import parking.guru.models.Reservation;
 import parking.guru.models.User;
+import parking.guru.models.enums.Role;
+import parking.guru.services.ReservationService;
 import parking.guru.services.UserService;
 import parking.guru.exceptions.CustomGraphQLException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class UserQueryResolver {
 
     private final UserService userService;
+    private final ReservationService reservationService;
 
     @QueryMapping
     public User userById(@Argument Long id) {
@@ -51,14 +57,26 @@ public class UserQueryResolver {
     }
 
     @QueryMapping
-    public Boolean isUserPolice() {
+    public IsUserPoliceResponse isUserPolice() {
+        // Get the currently authenticated user
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        User currentUser = userService.validateAndGetUserByEmail(userEmail);
 
-        for (GrantedAuthority authority : authentication.getAuthorities()) {
-            if (authority.getAuthority().equals("POLICE")) {
-                return true;
-            }
+        // Check if the user has the POLICE role
+        if (currentUser.getRole() == Role.POLICE) {
+            return new IsUserPoliceResponse(true, null); // Return true if the user is POLICE, no reservation
         }
-        return false;
+
+        // If the user has the USER role, find the active reservation (endDateTime is null)
+        if (currentUser.getRole() == Role.USER) {
+            Optional<Reservation> activeReservation = Optional.ofNullable(reservationService.getActiveReservation((long) currentUser.getId()));
+
+            // Return response with the active reservation or null if not found
+            return new IsUserPoliceResponse(false, activeReservation.orElse(null));
+        }
+
+        // If neither role is found (which shouldn't happen), return a default response
+        return new IsUserPoliceResponse(false, null);
     }
 }

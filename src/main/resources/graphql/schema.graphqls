@@ -18,7 +18,7 @@ type Query {
     profileById(id: ID!): Profile
     getUserProfile: UserProfileResponse
 
-    isUserPolice: Boolean
+    isUserPolice: IsUserPoliceResponse
 
 }
 
@@ -136,6 +136,11 @@ type ReservationResponse {
     reservation: Reservation
     user: User
     error: String
+}
+
+type IsUserPoliceResponse {
+    success: Boolean
+    reservation: Reservation
 }
 
 enum ReservationStatus {
