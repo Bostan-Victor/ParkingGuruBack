@@ -62,7 +62,7 @@ public class ReservationMutationResolver {
         // Find the active reservation (endDateTime is null)
         Reservation activeReservation = reservationService.getActiveReservation((long) user.getId());
         if (activeReservation == null) {
-            throw new RuntimeException("No active reservation found for this user.");
+            throw new ActiveReservationExistsException("No active reservation found for this user.");
         }
 
         // Set the current time as the end time

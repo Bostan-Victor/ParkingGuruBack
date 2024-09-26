@@ -1,6 +1,5 @@
 package parking.guru.exceptions;
 
-import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
@@ -13,16 +12,26 @@ public class GraphQLExceptionHandler extends DataFetcherExceptionResolverAdapter
 
     @Override
     protected GraphQLError resolveToSingleError(Throwable ex, @NotNull DataFetchingEnvironment env) {
+        // Handle ActiveReservationExistsException
         if (ex instanceof ActiveReservationExistsException) {
             return GraphqlErrorBuilder.newError(env)
                     .message(ex.getMessage())
-                    .errorType(ErrorType.ValidationError)  // This indicates a client-side issue
+                    .errorType(CustomErrorType.VALIDATION_ERROR)  // Use custom error type
                     .build();
         }
 
-        // For other exceptions, provide a general error message
+        // Handle UnauthorizedAccessException
+        if (ex instanceof UnauthorizedAccessException) {
+            return GraphqlErrorBuilder.newError(env)
+                    .message(ex.getMessage())
+                    .errorType(CustomErrorType.UNAUTHORIZED)  // Use custom error type for unauthorized access
+                    .build();
+        }
+
+        // Handle other exceptions
         return GraphqlErrorBuilder.newError(env)
                 .message("Internal server error")
+                .errorType(CustomErrorType.INTERNAL_ERROR)  // Use custom error type for internal server errors
                 .build();
     }
 }
