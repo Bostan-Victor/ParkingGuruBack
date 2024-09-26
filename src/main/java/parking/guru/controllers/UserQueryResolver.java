@@ -3,6 +3,8 @@ package parking.guru.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import parking.guru.dtos.UserProfileResponse;
@@ -46,5 +48,17 @@ public class UserQueryResolver {
                 user.getEmail(),
                 user.getPhoneNumber()
         );
+    }
+
+    @QueryMapping
+    public Boolean isUserPolice() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            if (authority.getAuthority().equals("POLICE")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

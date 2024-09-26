@@ -8,6 +8,7 @@ type Query {
     reservationByUserId(id: ID!): Reservation
     allReservationByUserId(id: ID!): [Reservation!]
     getActiveReservation: ActiveReservationResponse
+    activeReservationByPlate(plateNumber: String!): ReservationResponse
 
     allUsers: [User]
     userById(id: Int!): User
@@ -16,6 +17,9 @@ type Query {
     allProfiles: [Profile]
     profileById(id: ID!): Profile
     getUserProfile: UserProfileResponse
+
+    isUserPolice: Boolean
+
 }
 
 type Mutation {
@@ -124,6 +128,14 @@ type UserProfileResponse {
     lastName: String
     email: String
     phoneNumber: String
+}
+
+type ReservationResponse {
+    success: Boolean!
+    message: String
+    reservation: Reservation
+    user: User
+    error: String
 }
 
 enum ReservationStatus {

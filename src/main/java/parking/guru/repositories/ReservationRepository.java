@@ -29,4 +29,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r FROM Reservation r WHERE r.user.id = :id AND r.endDateTime IS NOT NULL ")
     List<Reservation> findAllByUserId(Long id);
+
+    @Query("SELECT r FROM Reservation r WHERE r.plateNumber = :plateNumber AND r.endDateTime IS NULL")
+    Optional<Reservation> findActiveReservationByPlateNumber(@Param("plateNumber") String plateNumber);
 }

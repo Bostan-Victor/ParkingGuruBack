@@ -84,7 +84,7 @@ public class PhoneNumberVerificationController {
             }
 
         } catch (Exception e) {
-            return new ResponseEntity<>("Verification failed.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Verification failed. The OTP was redeemed or expired.", HttpStatus.BAD_REQUEST);
         }
     }
 }
