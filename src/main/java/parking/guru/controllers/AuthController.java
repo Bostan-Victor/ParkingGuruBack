@@ -59,7 +59,7 @@ public class AuthController {
 
     private String authenticateAndGetToken(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        return tokenProvider.generate(authentication);
+        return tokenProvider.generate(authentication, true);
     }
 
     // Helper method to determine if the input is a phone number

@@ -15,12 +15,12 @@ public class GoogleOAuth2UserInfoExtractor implements OAuth2UserInfoExtractor {
 
     @Override
     public CustomUserDetails extractUserInfo(OAuth2User oAuth2User) {
-        CustomUserDetails customUserDetails = new CustomUserDetails();
-        customUserDetails.setEmail(retrieveAttr("email", oAuth2User));
-        customUserDetails.setProvider(OAuth2Provider.GOOGLE);
-        customUserDetails.setAttributes(oAuth2User.getAttributes());
-        customUserDetails.setAuthorities(Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(Role.USER))));
-        return customUserDetails;
+        return CustomUserDetails.builder()
+                .email(retrieveAttr("email", oAuth2User))
+                .provider(OAuth2Provider.GOOGLE)
+                .attributes(oAuth2User.getAttributes())
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(Role.USER))))
+                .build();
     }
 
     @Override
