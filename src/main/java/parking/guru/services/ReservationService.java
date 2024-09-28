@@ -28,8 +28,13 @@ public class ReservationService {
         return reservationRepository.findByPlateNumber(plateNumber);
     }
 
-    public Optional<Reservation> getReservationByLocation(String latitude, String longitude) {
-        return reservationRepository.findByLocation(latitude, longitude);
+    public Optional<Reservation> getActiveReservationByPlateNumber(String plateNumber) {
+        // Find active reservation (endDateTime is null) by plate number
+        return reservationRepository.findActiveReservationByPlateNumber(plateNumber);
+    }
+
+    public Optional<Reservation> getReservationByLocation(String address) {
+        return reservationRepository.findByAddress(address);
     }
 
     public Optional<Reservation> getReservationByStatus(Status status) {

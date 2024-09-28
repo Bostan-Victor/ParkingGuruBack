@@ -30,8 +30,20 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> getUserByEmailOrPhoneNumber(String username) {
+        return userRepository.findByEmailOrPhoneNumber(username);
+    }
+
     public boolean hasUserWithEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public boolean hasUserWithPhoneNumber(String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    public boolean hasUserWithUuid(String uuid) {
+        return userRepository.existsByUid(uuid);
     }
 
     public User validateAndGetUserByEmail(String email) {
@@ -57,5 +69,9 @@ public class UserService {
         }
     }
 
+    public boolean isUserVerified(String email) {
+        User user = validateAndGetUserByEmail(email);
+        return user.getIsVerified();
+    }
 }
 
