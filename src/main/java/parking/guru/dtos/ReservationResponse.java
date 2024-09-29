@@ -14,4 +14,5 @@ public class ReservationResponse {
     private String message;
     private Reservation reservation;
     private User user;
+    private Long elapsedTime;
 }

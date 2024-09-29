@@ -88,11 +88,16 @@ public class ReservationQueryResolver {
         Optional<Reservation> activeReservation = reservationService.getActiveReservationByPlateNumber(plateNumber);
 
         if (activeReservation.isEmpty()) {
-            return new ReservationResponse(false, "No active reservation found for plate number: " + plateNumber, null, null);
+            return new ReservationResponse(false, "No active reservation found for plate number: " + plateNumber, null, null, null);
         }
 
         Reservation reservation = activeReservation.get();
-        return new ReservationResponse(true, "Active reservation found", reservation, reservation.getUser());
+        LocalDateTime now = LocalDateTime.now();
+        Duration elapsedTime = Duration.between(reservation.getStartDateTime(), now);
+        long elapsedTimeInSeconds = elapsedTime.toSeconds();
+
+        // Return the response with elapsed time
+        return new ReservationResponse(true, "Active reservation found", reservation, reservation.getUser(), elapsedTimeInSeconds);
     }
 
     @QueryMapping
