@@ -3,10 +3,10 @@ name: CI Pipeline for Spring Boot Gradle Project
 on:
   push:
     branches:
-      - fix-bug  
+      - main  
   pull_request:
     branches:
-      - fix-bug
+      - main
 
 jobs:
   build:
