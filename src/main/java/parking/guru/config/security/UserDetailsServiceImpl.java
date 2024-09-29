@@ -21,15 +21,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         // Use getUserByEmail instead of getUserByUserEmail
-        User user = userService.getUserByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username %s not found", username)));
+        User user = userService.getUserByEmailOrPhoneNumber(username)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("User with %s not found", username)));
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(String.valueOf(user.getRole())));
         return mapUserToCustomUserDetails(user, authorities);
     }
 
     private CustomUserDetails mapUserToCustomUserDetails(User user, List<SimpleGrantedAuthority> authorities) {
         CustomUserDetails customUserDetails = new CustomUserDetails();
-        customUserDetails.setId(user.getId());
+        customUserDetails.setId((long) user.getId());
         customUserDetails.setPassword(user.getPassword());
         customUserDetails.setEmail(user.getEmail());
         customUserDetails.setAuthorities(authorities);
